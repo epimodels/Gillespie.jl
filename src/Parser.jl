@@ -35,6 +35,7 @@ end
 function getF_dd()
     species = model.species
     parameters = model.parameters
+    reactions = model.reactions
 
     funcString = "function F_dd(x,parms)\n"
     stateString = "    ("
@@ -50,6 +51,40 @@ function getF_dd()
         paramString = paramString * i * ","
     end
     paramString = first(paramString, length(paramString) - 1) * ") = parms\n"
+
+    for i in reactions
+        println(i)
+    end
+
+    print(stateString)
+    print(paramString)
+end
+
+# gets the propensities by parsing through the pysces model and looking for the reactions
+# returns a string that represents an array of propensities
+function getPropensities()
+
+    reactions = model.reactions
+    output = "["
+    
+    open(model.ModelDir * "/" * model.ModelFile) do f
+
+        current_reaction = 1
+    
+        # read till end of file
+        while (! eof(f))
+            line = readline(f) # read a new / next line for every iteration
+            if (occursin(reactions[current_reaction], line))
+                readline(f)
+                output = output * readline(f) * ","
+                if (reactions[current_reaction] == last(reactions))
+                    break
+                end
+                current_reaction += 1
+            end
+        end
+    end
+    return replace(first(output, length(output) - 1) * "]"," " => "") # remove last comma, add closing bracket, remove spaces
 end
 
 # Function dealing with state x and parameters parms
@@ -74,4 +109,4 @@ function simulate()
     print(data)
 end
 
-getF_dd()
+getPropensities()
