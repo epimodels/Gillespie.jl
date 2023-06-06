@@ -32,34 +32,6 @@ function getMatrix(model)
     return (convert(Matrix{Int64}, model.Nmatrix.array))'
 end
 
-function getF_dd()
-    species = model.species
-    parameters = model.parameters
-    reactions = model.reactions
-
-    funcString = "function F_dd(x,parms)\n"
-    stateString = "    ("
-    paramString = "    ("
-    
-
-    for i in species
-        stateString = stateString * i * ","
-    end
-    stateString = first(stateString, length(stateString) - 1) * ") = x\n"
-
-    for i in parameters
-        paramString = paramString * i * ","
-    end
-    paramString = first(paramString, length(paramString) - 1) * ") = parms\n"
-
-    for i in reactions
-        println(i)
-    end
-
-    print(stateString)
-    print(paramString)
-end
-
 # gets the propensities by parsing through the pysces model and looking for the reactions
 # returns a string that represents an array of propensities
 function getPropensities()
@@ -84,16 +56,35 @@ function getPropensities()
             end
         end
     end
-    return replace(first(output, length(output) - 1) * "]"," " => "") # remove last comma, add closing bracket, remove spaces
+    return replace(first(output, length(output) - 1) * "]\n"," " => "") # remove last comma, add closing bracket, remove spaces
 end
 
-# Function dealing with state x and parameters parms
-# **F** : a `Function` or a callable type, which itself takes two arguments; x, a `Vector` of `Int64` representing the states, and parms, a `Vector` of `Float64` representing the parameters of the system. In the case of time-varying rates (for algorithms `:jensen` and `:tjm`), there should be a third argument, the time of the system.
-function F_dd(x,parms)
-    (S1,S2,S3) = x
-    (c1,c2,c3,c4) = parms
-    [c1*S1,c2*S1*S1,c3*S2,c4*S2]
+# Constructs expression for propensities function
+macro getF_dd()
+    species = model.species
+    parameters = model.parameters
+
+    funcString = "function F_dd(x,parms)\n"
+    stateString = "    ("
+    paramString = "    ("
+    
+
+    for i in species
+        stateString = stateString * i * ","
+    end
+    stateString = first(stateString, length(stateString) - 1) * ") = x\n"
+
+    for i in parameters
+        paramString = paramString * i * ","
+    end
+    paramString = first(paramString, length(paramString) - 1) * ") = parms\n"
+
+    propString = getPropensities()
+
+    return Meta.parse(funcString * stateString * paramString * "    " * propString * "end")
 end
+
+@getF_dd
 
 function simulate()
     x0 = getInitVar(model) # a `Vector` of `Int64`, representing the initial states of the system. i.e. states of S1, S2, S3. #InitVar
@@ -106,7 +97,6 @@ function simulate()
 
     result = ssa(x0,F_dd,nu,parms,tf)
     data = ssa_data(result)
-    print(data)
 end
 
-getPropensities()
+simulate()
