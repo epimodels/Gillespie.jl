@@ -18,6 +18,7 @@ export
     SSAResult
 
 include("SSA.jl")
+include("PyscesInterface.jl")
 
 "
 This function performs stochastic simulation, currently using either the Doob-Gillespie algorithm or Jensen's method. It takes the following arguments:
@@ -47,5 +48,4 @@ function ssa(x0::AbstractVector{Int64},F::Base.Callable,nu::AbstractMatrix{Int64
     return tjm(x0,F,nu,parms,tf)
   end
 end
-
 end # module
