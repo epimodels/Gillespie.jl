@@ -1,10 +1,12 @@
 module Gillespie
 
+#using PyCall
 using Distributions
 using DataFrames
 using QuadGK
 using Roots
 using StaticArrays
+#const pysces = pyimport("pysces") #import pysces
 
 export
     ssa,
@@ -18,7 +20,7 @@ export
     SSAResult
 
 include("SSA.jl")
-include("PyscesInterface.jl")
+#include("PyscesInterface.jl")
 
 "
 This function performs stochastic simulation, currently using either the Doob-Gillespie algorithm or Jensen's method. It takes the following arguments:

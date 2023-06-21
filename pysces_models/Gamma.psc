@@ -265,13 +265,7 @@ R59:
 	N_c5 > N_u5
 	N_c5 * iota_N
 
-R60:
-	N_c5 > N_u5
-	N_c5 * tau_N * (P_c5 / (P_c5 + P_u5)) * gamma
-
-R61:
-	N_c5 > N_u5
-	N_c5 * tau_N * (P_c2 / (P_c2 + P_u2)) * ((1 - gamma) / 5)
+R60:odel = pysces.model(name + ".psc", dir='c:\\Pysces\\psc')
 	
 R62:
 	N_c5 > N_u5
