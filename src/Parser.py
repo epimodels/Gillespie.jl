@@ -39,7 +39,7 @@ def get_matrix(model):
 
         for j in i:
             output += str(j) + " "
-        output = output[0:-1] + "];["
+        output = output[0:-1] + "];\n["
     output = output[0:-2] + "]\n"
     return output
 
