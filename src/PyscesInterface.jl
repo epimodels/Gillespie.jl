@@ -1,9 +1,3 @@
-using PyCall
-const pysces = pyimport("pysces") #import pysces
-using Gillespie
-using Gadfly
-import Random: seed!
-
 # a `Vector` of `Int64`, representing the initial states of the system. i.e. states of S1, S2, S3. #InitVar
 function get_initvar(model)
     x1 = Vector{Int64}([])
