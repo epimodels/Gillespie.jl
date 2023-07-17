@@ -79,6 +79,30 @@ p=plot(data,
 
 Julia versions of the examples used in [`GillespieSSA`](http://www.jstatsoft.org/v25/i12/paper) are given in the [examples](https://github.com/sdwfrost/Gillespie.jl/blob/master/examples) directory.
 
+## Example Gamma
+```julia
+using Gillespie
+using Gadfly
+using Random
+
+include("examples/Gamma.jl")
+
+data.ssa_data(result)
+
+plot_theme = Theme(
+    panel_fill=colorant"white",
+    default_color=colorant"black"
+)
+
+p=plot(data,
+    layer(x=:time,y=:x17,Geom.step,Theme(default_color=colorant"red")),
+    Guide.xlabel("Time"),
+    Guide.ylabel("Acquisitions"),
+    Guide.title("Gamma simulation"),
+    plot_theme
+)
+```
+
 ## Jensen's method or uniformization
 
 The development version of ```Gillespie.jl``` includes code to simulate via uniformization (a.k.a. Jensen's method); the API is the same as for the SSA, with the addition of **max_rate**, the maximum rate (`Float64`). Optionally, another argument, **thin** (`Bool`), can be set to `false` to return all the jumps (including the fictitious ones), and saves a bit of time by pre-allocating the time vector. This code is under development at present, and may change. Time-varying rates can be accommodated by passing a rate function with three arguments, `F(x,parms,t)`, where `x` is the discrete state, `parms` are the parameters, and `t` is the simulation time.

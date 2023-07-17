@@ -1,4 +1,8 @@
-function getResult()
+using Gadfly
+using Gillespie
+import Random: seed!
+
+function Gamma()
     # **F** : a `Function` or a callable type, which itself takes two arguments; x, a `Vector` of `Int64` representing the states, and parms, a `Vector` of `Float64` representing the parameters of the system. In the case of time-varying rates (for algorithms `:jensen` and `:tjm`), there should be a third argument, the time of the system.
     function F_dd(x,parms)
         (N_u1,N_c1,N_u2,N_c2,N_u3,N_c3,N_u4,N_c4,N_u5,N_c5,N_u6,N_c6,D_u,D_c,P_u1,P_c1,Acquisition,P_u2,P_c2,P_u3,P_c3,P_u4,P_c4,P_u5,P_c5,P_u6,P_c6) = x
@@ -170,3 +174,126 @@ function getResult()
     return ssa(x0,F_dd,nu,parms,tf)
 end
 
+function CellDivision()
+    function F_dd(x,parms)
+        (TF,TFactive,mRNA,Protein) = x
+        (kTFsyn,kTFdeg,kActivate,kInactivate,kX,kmRNAsyn,kmRNAdeg,kProteinsyn,kProteindeg) = parms
+        [kTFsyn,kTFdeg*TF,kTFdeg*TFactive,kActivate*TF,kInactivate*TFactive,kmRNAsyn*(TFactive/(TFactive+kX)),kmRNAdeg*mRNA,kProteinsyn*mRNA,kProteindeg*Protein]
+    end
+    x0 = [2,10,10,220]
+    nu = [[1 0 0 0];[-1 0 0 0];[0 -1 0 0];[-1 1 0 0];[1 -1 0 0];[0 0 1 0];[0 0 -1 0];[0 0 0 1];[0 0 0 -1]]
+    parms = [200.0,20.0,2000.0,200.0,5.0,240.0,20.0,400.0,2.0]
+    tf = 10.0
+    seed!(1234)
+    return ssa(x0,F_dd,nu,parms,tf)
+end
+
+function BirthDeath()
+    function F_dd(x,parms)
+        (mRNA) = x
+        (Ksyn,Kdeg) = parms
+        [Ksyn*mRNA,Kdeg*mRNA]
+    end
+    x0 = [100]
+    nu = [[1];
+    [-1];]
+    parms = [2.9,3.0]
+    tf = 10.0
+    seed!(1234)
+    return ssa(x0,F_dd,nu,parms,tf)
+end
+
+function BurstModel()
+    function F_dd(x,parms)
+        (ONstate,OFFstate,mRNA) = x
+        (kon,koff,kdeg,ksyn) = parms
+        [koff*ONstate,kon*OFFstate,ksyn*ONstate,kdeg*mRNA]
+    end
+    x0 = [0,1,0]
+    nu = [[-1 1 0];
+    [1 -1 0];
+    [0 0 1];
+    [0 0 -1];]
+    parms = [0.05,0.05,2.5,80.0]
+    tf = 10.0
+    seed!(1234)
+    return ssa(x0,F_dd,nu,parms,tf)
+end
+
+function DecayingDimerizing()
+    function F_dd(x,parms)
+        (S1,S2,S3) = x
+        (k1,k2,k3,k4) = parms
+        [S1*k1,0.5*k2*S1*(S1-1),k3*S2,k4*S2]
+    end
+    x0 = [100000,0,0]
+    nu = [[-1 0 0];
+    [-2 1 0];
+    [2 -1 0];
+    [0 -1 1];]
+    parms = [1.0,0.002,0.5,0.04]
+    tf = 10.0
+    seed!(1234)
+    return ssa(x0,F_dd,nu,parms,tf)
+end
+
+function GenerDuplication()
+    function F_dd(x,parms)
+        (G1,mRNA1,G2,mRNA2) = x
+        (Ksyn,Kdeg) = parms
+        [Ksyn*G1,Kdeg*mRNA1,Ksyn*G2,Kdeg*mRNA2]
+    end
+    x0 = [1,50,1,50]
+    nu = [[0 1 0 0];
+    [0 -1 0 0];
+    [0 0 0 1];
+    [0 0 0 -1];]
+    parms = [10.0,0.2]
+    tf = 10.0
+    seed!(1234)
+    return ssa(x0,F_dd,nu,parms,tf)
+end
+
+function ImmigrationDeath()
+    function F_dd(x,parms)
+        (mRNA) = x
+        (Ksyn,Kdeg) = parms
+        [Ksyn,Kdeg*mRNA]
+    end
+    x0 = [50]
+    nu = [[1];
+    [-1];]
+    parms = [10.0,0.2]
+    tf = 10.0
+    seed!(1234)
+    return ssa(x0,F_dd,nu,parms,tf)
+end
+
+function Isomerization()
+    function F_dd(x,parms)
+        (X,Y) = x
+        (k1) = parms
+        [k1*X]
+    end
+    x0 = [20,0]
+    nu = [[-1 1];]
+    parms = [0.5]
+    tf = 10.0
+    seed!(1234)
+    return ssa(x0,F_dd,nu,parms,tf)
+end
+
+function Polymerase()
+    function F_dd(x,parms)
+        (polymerase,mRNA) = x
+        (Ksyn,Kdeg) = parms
+        [Ksyn*polymerase,Kdeg*mRNA]
+    end
+    x0 = [10,0]
+    nu = [[0 1];
+    [0 -1];]
+    parms = [0.5,0.1]
+    tf = 10.0
+    seed!(1234)
+    return ssa(x0,F_dd,nu,parms,tf)
+end
