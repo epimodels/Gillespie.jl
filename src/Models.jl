@@ -1,5 +1,7 @@
 using Gadfly
 using Gillespie
+using CSV
+using DataFrames
 import Random: seed!
 
 function Gamma()
@@ -171,7 +173,7 @@ function Gamma()
     parms = [3.973,0.181,0.054,0.0464,0.1667,0.00949,0.0779,6.404,1.748,2.728,0.744,0.002083]
     tf = 10000.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
 function CellDivision()
@@ -185,9 +187,10 @@ function CellDivision()
     parms = [200.0,20.0,2000.0,200.0,5.0,240.0,20.0,400.0,2.0]
     tf = 10.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
+#Abstract Matrix issue
 function BirthDeath()
     function F_dd(x,parms)
         (mRNA) = x
@@ -200,7 +203,7 @@ function BirthDeath()
     parms = [2.9,3.0]
     tf = 10.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
 function BurstModel()
@@ -217,7 +220,7 @@ function BurstModel()
     parms = [0.05,0.05,2.5,80.0]
     tf = 10.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
 function DecayingDimerizing()
@@ -234,10 +237,10 @@ function DecayingDimerizing()
     parms = [1.0,0.002,0.5,0.04]
     tf = 10.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
-function GenerDuplication()
+function GeneDuplication()
     function F_dd(x,parms)
         (G1,mRNA1,G2,mRNA2) = x
         (Ksyn,Kdeg) = parms
@@ -251,9 +254,10 @@ function GenerDuplication()
     parms = [10.0,0.2]
     tf = 10.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
+#AbstractMatrix issue
 function ImmigrationDeath()
     function F_dd(x,parms)
         (mRNA) = x
@@ -266,9 +270,10 @@ function ImmigrationDeath()
     parms = [10.0,0.2]
     tf = 10.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
+#Issue
 function Isomerization()
     function F_dd(x,parms)
         (X,Y) = x
@@ -280,7 +285,22 @@ function Isomerization()
     parms = [0.5]
     tf = 10.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))
+end
+
+#e.g. Polymerase(10.0, 1234)
+function Polymerase(tf::Float64, seed::Int64)
+    function F_dd(x,parms)
+        (polymerase,mRNA) = x
+        (Ksyn,Kdeg) = parms
+        [Ksyn*polymerase,Kdeg*mRNA]
+    end
+    x0 = [10,0]
+    nu = [[0 1];
+    [0 -1];]
+    parms = [0.5,0.1]
+    seed!(seed)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))[:, Cols(:time, :x2)]
 end
 
 function Polymerase()
@@ -295,5 +315,18 @@ function Polymerase()
     parms = [0.5,0.1]
     tf = 10.0
     seed!(1234)
-    return ssa(x0,F_dd,nu,parms,tf)
+    return ssa_data(ssa(x0,F_dd,nu,parms,tf))[:, Cols(:time, :x2)]
+end
+
+#CSV.write(dirname(pwd()) * "/output/export_df.csv", df)
+function Driver(f::Function, iterations::Int64)
+    for i in 1:iterations
+        f()
+    end
+end
+
+function Driver(f::Function, iterations::Int64, tf::Float64, seed::Int64)
+    for i in 1:iterations
+        f(tf, seed)
+    end
 end
