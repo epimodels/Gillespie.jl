@@ -1,3 +1,26 @@
+# Testing
+
+## Testing validity of outputs
+
+Output to CSV files using Stochpy and Gillespie.jl-> Compare CSV files with *Data Science*
+
+Gamma - do this one last
+Cell Division
+BirthDeath
+
+    
+
+BurstModel
+Decaying Dimerizing
+GeneDuplication
+ImmigrationDeath
+Isomerization - Issue
+Polymerase
+
+Models to include:
+Protein Synthesis
+
+## Testing performance
 
 # Gillespie.jl
 

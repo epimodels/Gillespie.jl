@@ -1,4 +1,5 @@
 function Gamma()
+    print("here")
     # **F** : a `Function` or a callable type, which itself takes two arguments; x, a `Vector` of `Int64` representing the states, and parms, a `Vector` of `Float64` representing the parameters of the system. In the case of time-varying rates (for algorithms `:jensen` and `:tjm`), there should be a third argument, the time of the system.
     function F_dd(x,parms)
         (N_u1,N_c1,N_u2,N_c2,N_u3,N_c3,N_u4,N_c4,N_u5,N_c5,N_u6,N_c6,D_u,D_c,P_u1,P_c1,Acquisition,P_u2,P_c2,P_u3,P_c3,P_u4,P_c4,P_u5,P_c5,P_u6,P_c6) = x
@@ -170,6 +171,7 @@ function Gamma()
     return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
+#Gamma function that takes in an intitial gamma valuee
 function Gamma(initGamma::Float64)
     # **F** : a `Function` or a callable type, which itself takes two arguments; x, a `Vector` of `Int64` representing the states, and parms, a `Vector` of `Float64` representing the parameters of the system. In the case of time-varying rates (for algorithms `:jensen` and `:tjm`), there should be a third argument, the time of the system.
     function F_dd(x,parms)
