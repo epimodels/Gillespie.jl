@@ -397,7 +397,7 @@ function DecayingDimerizing()
         (k1,k2,k3,k4) = parms
         [S1*k1,0.5*k2*S1*(S1-1),k3*S2,k4*S2]
     end
-    x0 = [100000,0,0]
+    x0 = [100,0,0]
     nu = [[-1 0 0];
     [-2 1 0];
     [2 -1 0];

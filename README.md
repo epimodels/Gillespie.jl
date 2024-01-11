@@ -6,10 +6,9 @@ Output to CSV files using Stochpy and Gillespie.jl-> Compare CSV files with *Dat
 
 Gamma - do this one last
 Cell Division
-BirthDeath
 
     
-
+BirthDeath - Issue
 BurstModel
 Decaying Dimerizing
 GeneDuplication

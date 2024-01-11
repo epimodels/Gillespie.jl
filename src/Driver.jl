@@ -30,4 +30,5 @@ function Driver(f::Function, iterations::Int64, tf::Float64, seed::Int64)
     end
 end
 
-GammaDistribution([0.1, 0.2, 0.3, 0.4, 0.5])
+#GammaDistribution([0.1, 0.2, 0.3, 0.4, 0.5])
+print(DecayingDimerizing())
