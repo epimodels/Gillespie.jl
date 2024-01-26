@@ -30,5 +30,14 @@ function Driver(f::Function, iterations::Int64, tf::Float64, seed::Int64)
     end
 end
 
+function Printer(iterations::Int64, f::Function, location::String, name::String)
+    for i in 1:iterations
+        TLR = seed!(1234)
+        CSV.write(dirname(pwd()) * "/Gillespie/outputs/julia_outputs/DecayingDimerizing/" * name * string(i) * ".csv", DecayingDimerizing(TLR))
+    end
+end
+
 #GammaDistribution([0.1, 0.2, 0.3, 0.4, 0.5])
-print(DecayingDimerizing())
+#CSV.write(dirname(pwd()) * "/Gillespie/outputs/julia_outputs/DecayingDimerizing/export_df.csv", DecayingDimerizing())
+
+Printer(20, DecayingDimerizing, "/Gillespie/outputs/julia_outputs/DecayingDimerizing/", "DecayingDimerizing")

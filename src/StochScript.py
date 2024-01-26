@@ -10,6 +10,7 @@ import pandas as pd
 smod = stochpy.SSA()
 smod.Model('DecayingDimerizing.psc')
 smod.DoStochSim(trajectories=3)
+
 smod.Export2File()
 read_file = pd.read_csv(r'~/Stochpy/DecayingDimerizing.psc_species_timeseries1.txt')
 read_file.to_csv(r'~/Stochpy/DecayingDimerizing1.csv', index=None)

@@ -391,7 +391,7 @@ function BurstModel()
     return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
-function DecayingDimerizing()
+function DecayingDimerizing(TLR::TaskLocalRNG)
     function F_dd(x,parms)
         (S1,S2,S3) = x
         (k1,k2,k3,k4) = parms
@@ -404,7 +404,7 @@ function DecayingDimerizing()
     [0 -1 1];]
     parms = [1.0,0.002,0.5,0.04]
     tf = 10.0
-    seed!(1234)
+    TLR
     return ssa_data(ssa(x0,F_dd,nu,parms,tf))
 end
 
