@@ -1,26 +1,3 @@
-# Testing
-
-## Testing validity of outputs
-
-Output to CSV files using Stochpy and Gillespie.jl-> Compare CSV files with *Data Science*
-
-Gamma - do this one last
-Cell Division
-
-    
-BirthDeath - Issue
-BurstModel
-Decaying Dimerizing
-GeneDuplication
-ImmigrationDeath
-Isomerization - Issue
-Polymerase
-
-Models to include:
-Protein Synthesis
-
-## Testing performance
-
 # Gillespie.jl
 
 [![Build Status](https://travis-ci.org/sdwfrost/Gillespie.jl.svg?branch=master)](https://travis-ci.org/sdwfrost/Gillespie.jl)
@@ -40,6 +17,15 @@ Protein Synthesis
 This is an implementation of [Gillespie's direct method](http://en.wikipedia.org/wiki/Gillespie_algorithm) as well as [uniformization/Jensen's method](https://en.wikipedia.org/wiki/Uniformization_(probability_theory)) for performing stochastic simulations, which are widely used in many fields, including systems biology and epidemiology. It borrows the basic interface (although none of the code) from the R library [`GillespieSSA`](http://www.jstatsoft.org/v25/i12/paper) by Mario Pineda-Krch, although `Gillespie.jl` only implements exact methods at present, whereas `GillespieSSA` also includes tau-leaping, *etc.*. It is intended to offer performance on par with hand-coded C code; please file an issue if you find an example that is significantly slower (2 to 5 times) than C.
 
 ## Installation
+
+The epimodels development version can be installed as follows.
+```julia
+Pkg.add("https://github.com/epimodels/Gillespie.jl")
+```
+
+Or through the package manager using "add https://github.com/epimodels/Gillespie.jl.git"
+
+The library should then be visible as: Gillespie v0.1.0 `https://github.com/epimodels/Gillespie.jl.git#main`
 
 The stable release of ```Gillespie.jl``` can be installed from the Julia REPL using the following command.
 
